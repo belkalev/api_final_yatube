@@ -38,7 +38,7 @@ class TestPostAPI:
         test_data = response.json()
 
         # response without pagination must be a list type
-        assert type(test_data) == list, (
+        assert isinstance(test_data, list), (
             'Проверьте, что при GET запросе на `/api/v1/posts/` без пагинации, возвращается список'
         )
 
@@ -69,7 +69,8 @@ class TestPostAPI:
         )
 
     @pytest.mark.django_db(transaction=True)
-    def test_posts_get_paginated(self, user_client, post, post_2, another_post):
+    def test_posts_get_paginated(
+            self, user_client, post, post_2, another_post):
         base_url = '/api/v1/posts/'
         limit = 2
         offset = 2
@@ -82,7 +83,7 @@ class TestPostAPI:
         test_data = response.json()
 
         # response with pagination must be a dict type
-        assert type(test_data) == dict, (
+        assert isinstance(test_data, dict), (
             f'Проверьте, что при GET запросе на `{url}` с пагинацией, возвращается словарь'
         )
         assert "results" in test_data.keys(), (
@@ -134,8 +135,8 @@ class TestPostAPI:
             'Проверьте, что при POST запросе на `/api/v1/posts/` с правильными данными возвращается статус 201'
         )
         assert (
-                response.json().get('author') is not None
-                and response.json().get('author') == user.username
+            response.json().get('author') is not None
+            and response.json().get('author') == user.username
         ), (
             'Проверьте, что при POST запросе на `/api/v1/posts/` автором указывается пользователь,'
             'от имени которого сделан запрос'
@@ -157,7 +158,7 @@ class TestPostAPI:
         msg_error = (
             'Проверьте, что при POST запросе на `/api/v1/posts/` возвращается словарь с данными новой статьи'
         )
-        assert type(test_data) == dict, msg_error
+        assert isinstance(test_data, dict), msg_error
         assert test_data.get('text') == data['text'], msg_error
 
         assert test_data.get('author') == user.username, (
